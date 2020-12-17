@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/pure-mini.css" %}">
+    <link rel="stylesheet" href="{% static "css/base.css" %}">
+    <link rel="stylesheet" href="{% static "css/side-menu.css" %}">
+    <title>查看专家信息</title>
+</head>
+
+<body>
+<div class="detail-info">
+    <h1>专家信息</h1>
+    <h2>基本信息</h2>
+    <p>姓名：{{specialist.name}}</p>
+    <p>性别：{{specialist.sex}}</p>
+    <p>类别：{{specialist.category.name}}</p>
+    <p>出生年月：{{specialist.birth|date:"Y-m-d" }}</p>
+    <h2>联系方式</h2>
+    <p>手机：{{specialist.phone}}</p>
+    <p>邮箱：{{specialist.email}}</p>
+    <h2>工作评价</h2>
+    <table class="pure-table" style="width: 100%;">
+        <thead>
+            <tr>
+                <th>项目名称</th>
+                <th>创建者</th>
+                <th>评价</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for project in projects %}
+            <tr id="{{ project.pid.id }}">
+                <td>{{ project.pid.name }}</td>
+                <td>{{ project.pid.owner.username }}</td>
+                <td>{{ project.commnet }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/pure-mini.css" %}">
+    <link rel="stylesheet" href="{% static "css/base.css" %}">
+    <link rel="stylesheet" href="{% static "css/side-menu.css" %}">
+    <link rel="stylesheet" href="{% static "css/base.css" %}">
+    <title>专家评价</title>
+</head>
+
+<body>
+<div class="detail-info">
+    <h1>项目名称：{{project.name}}</h1>
+    <h2>创建者：{{project.owner.username}}</h2>
+    <h2>专家评价</h2>
+    <form action="/project/comment/" method="POST">
+    {% csrf_token %}
+    <input name="pid" value="{{project.id}}" type="text" style="display:none" />
+    {% for specialist in specialist_list %}
+    <ul id="{{ specialist.sid.id }}" class="info-box">
+        <li>姓名：{{ specialist.sid.name }}</li>
+        <li>
+            评价：
+            <input value="{{specialist.comment}}" name="{{specialist.sid.id}}" />
+        </li>
+    </ul>
+    {% endfor %}
+    <button type="submit" class="pure-button pure-button-primary">提交</button>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block mainhead %}
+<title>项目管理</title>
+{% load static %}
+<script src="{% static "js/jquery.js" %}"></script>
+<script src="{% static "js/category.js" %}" text="javascript"></script>
+{% endblock mainhead %}
+
+{% block maintitle %}
+<h1>项目管理</h1>
+{% endblock maintitle %}
+
+{% block mainbody %}
+<table class="pure-table" style="width: 100%;">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>项目名称</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for project in projects %}
+        <tr id="{{ project.id }}">
+            <td>{{ project.id }}</td>
+            <td><a href="/project/view?id={{project.id}}" target="view_window">{{ project.name }}</a></td>
+            <td>
+                <a href="/project/comment?id={{project.id}}" target="view_window">评价</a>
+                <a href="/project/del?id={{project.id}}">删除</a>
+                <a href="/project/export?id={{project.id}}" target="view_window">导出</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% include "paginator.html" %}
+{% endblock mainbody %}

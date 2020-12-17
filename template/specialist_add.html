@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block mainhead %}
+    <title>信息采集</title>
+    {% load static %}
+    <script src="{% static "js/jquery.js" %}"></script>
+    <script src="{% static "js/category.js" %}" text="javascript"></script>
+    <script src="{% static "js/specialist.js" %}" text="javascript"></script>
+{% endblock mainhead %}
+
+{% block maintitle %}
+    <h1>信息采集</h1>
+{% endblock maintitle %}
+
+{% block mainbody %}
+    <form class="pure-form pure-form-aligned form-left" action="/specialist/add/" method="POST" 
+        onsubmit="return add_specialist(this)">
+        {% csrf_token %}
+        <fieldset>
+            <div class="pure-control-group">
+                <label for="name">姓名</label>
+                <input name="name" id="name" type="text" placeholder="姓名" required>
+            </div>
+
+            <div class="pure-control-group">
+                <label for="sex">性别</label>
+                <select name="sex" id="sex">
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
+            </div>
+
+            <div class="pure-control-group">
+                <label for="birth">出生日期</label>
+                <input type="date" name="birth" id="birth" required>
+            </div>
+
+            <div class="pure-control-group">
+                <label for="category">类别</label>
+                <select name="category" id="category" required>
+                    <option value=0>请选择</option>
+                </select>
+            </div>
+
+            <div class="pure-control-group">
+                <label for="phone">手机号</label>
+                <input name="phone" id="phone" type="text" placeholder="手机号" required>
+            </div>
+            <div class="pure-control-group">
+                <label for="email">邮箱</label>
+                <input name="email" id="email" type="text" placeholder="邮箱" required>
+            </div>
+
+            <div class="pure-control-group">
+                <label for="volunteer1">志愿1</label>
+                <input name="volunteer1" id="volunteer1" type="text" placeholder="志愿1" required>
+            </div>
+
+            <div class="pure-control-group">
+                <label for="volunteer2">志愿2</label>
+                <input name="volunteer2" id="volunteer2" type="text" placeholder="志愿2" required>
+            </div>
+
+            <div class="pure-control-group">
+                <label for="volunteer3">志愿3</label>
+                <input name="volunteer3" id="volunteer3" type="text" placeholder="志愿3" required>
+            </div>
+
+            <div class="pure-control-group">
+                <label></label>
+                <button class="pure-button pure-button-primary" type="submit">增加</button>
+                <p class="error" id="error"></p>
+            </div>
+
+
+        </fieldset>
+    </form>
+{% endblock mainbody %}

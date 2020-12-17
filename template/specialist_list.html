@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block mainhead %}
+<title>信息管理</title>
+{% load static %}
+<script src="{% static "js/jquery.js" %}"></script>
+<script src="{% static "js/category.js" %}" text="javascript"></script>
+{% endblock mainhead %}
+
+{% block maintitle %}
+<h1>信息管理</h1>
+{% endblock maintitle %}
+
+{% block mainbody %}
+<form class="pure-form" action="/specialist/list/" method="POST">
+    {% csrf_token %}
+    <fieldset>
+    <input name="name" id="name" type="text" placeholder="输入姓名搜索">
+    <select name="category" id="category" required>
+        <option value=0>全部</option>
+    </select>
+    <button type="submit" class="pure-button pure-button-primary">筛选</button>
+    </fieldset>
+</form>
+<table class="pure-table" style="width: 100%;">
+    <thead>
+        <tr>
+            <th>姓名</th>
+            <th>类别</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for specialist in specialists %}
+        <tr id="{{ specialist.id }}">
+            <td><a href="/specialist/view?id={{specialist.id}}" target="view_window">{{ specialist.name }}</a></td>
+            <td>{{ specialist.category.name }}</td>
+            <td>
+                <a href="/specialist/update?id={{specialist.id}}" target="view_window"><span>编辑</span></a>
+                <a href="/specialist/del?id={{specialist.id}}"><span>删除</span></a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% include "paginator.html" %}
+{% endblock mainbody %}
