@@ -4,11 +4,10 @@ import json
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.http import HttpResponse
-from django.core.paginator import Paginator
-from django.core.paginator import PageNotAnInteger
-from django.core.paginator import EmptyPage
+import random
 from Specialist.models import SpecialistCategory
-from Specialist.models import Specialist
+from Specialist.models import *
+from Specialist.models import SchoolList
 from Specialist.models import ProjectSpecialist
 from specialist_info.base import base
 from .user import check_login
@@ -52,75 +51,63 @@ def del_specialist(request):
 @check_login
 @check_admin
 @base
-def list_specialist(request, *arg):
-    """专家分页列表"""
-    page = request.GET.get('page')
-    name = request.POST.get('name')
-    cate = request.POST.get('category')
-    specialist_list = get_specialist_list(name, cate)
-    paginator = Paginator(specialist_list, 20)
-    try:
-        # 用于得到指定页面的内容
-        current_page = paginator.page(page)
-        # 得到当前页的所有对象列表
-        specialists = current_page.object_list
-    # 请求页码数值不是整数
-    except PageNotAnInteger:
-        current_page = paginator.page(1)
-        specialists = current_page.object_list
-    # 请求页码数值为空或者在URL参数中没有page
-    except EmptyPage:
-        # paginator.num_pages返回的是页数
-        current_page = paginator.page(paginator.num_pages)
-        specialists = current_page.object_list
-    arg[0]['page'] = current_page
-    arg[0]['specialists'] = specialists
-    #response.copy(arg[0])
-    return render(request, 'specialist_list.html', arg[0])
-
-@check_login
-@check_admin
-@base
 def add_specialist(request, *arg):
-    """新增专家信息"""
+    """新增学生信息"""
     if request.method == 'GET':
-        return render(request, 'specialist_add.html', arg[0])
+        response = {}
+        student_list = Studentlist.objects.all()
+        response['student_list'] = student_list
+        for istudent in response['student_list']:
+            print("学生名称为：" + istudent.name)
+        return render(request, 'specialist_add.html', response)
     if request.method == 'POST':
+        rank =random.randint(0, 1e5)
         name = request.POST.get('name')
         sex = request.POST.get('sex')
-        birth = request.POST.get('birth')
-        key = request.POST.get('category')
-        category_obj = SpecialistCategory.objects.get(key=key)
         phone = request.POST.get('phone')
         email = request.POST.get('email')
-        specialist = Specialist(
-            name=name, sex=sex, birth=birth, 
-            phone=phone, email=email, category=category_obj
+        volunteer1 = request.POST.get('volunteer1')
+        volunteer2 = request.POST.get('volunteer2')
+        volunteer3 = request.POST.get('volunteer3')
+
+        studentlist = Studentlist(
+            rank = rank,
+            name=name, sex=sex,
+            phone=phone, email=email,
+            volunteer1=volunteer1, volunteer2=volunteer2, volunteer3=volunteer3
             )
-        specialist.save()
+        print("新增学生成功:%s,名次为%d", studentlist.name, studentlist.rank)
+        studentlist.save()
         return render(request, 'specialist_add.html', arg[0])
 
 @check_login
 @check_admin
 @base
 def add_school(request, *arg):
-    """新增专家信息"""
+    """新增学校信息"""
     if request.method == 'GET':
-        return render(request, 'school_add.html', arg[0])
+        response = {}
+        school_list = SchoolList.objects.all()
+        response['school_list'] = school_list
+        for ischool in response['school_list']:
+            print("学校名称为：" + ischool.schoolname)
+        return render(request, 'school_add.html', response)
     if request.method == 'POST':
         name = request.POST.get('name')
         peopleCount = request.POST.get('peopleCount')
 
-        specialist = Specialist(
-            name=name, peopleCount = peopleCount
+        schoollist = SchoolList(
+            schoolname = name, peopleCount = peopleCount
         )
-        specialist.save()
+        schoollist.save()
+        myData = SchoolList.objects.all()
+        print("增加学校成功"+myData[0].schoolname)
         return render(request, 'school_add.html', arg[0])
 
 @check_login
 @check_admin
 def update_specialist(request):
-    """修改专家信息"""
+    """修改学生信息"""
     if request.method == 'POST':
         r_id = request.POST.get('id')
         specialist = Specialist.objects.get(id=r_id)
@@ -134,11 +121,19 @@ def update_specialist(request):
 
 
 def category(request):
-    """获取分类信息"""
+    """获取学校信息"""
     response = {}
-    objs = SpecialistCategory.objects.all()
-    for obj in objs:
-        response[obj.key] = obj.name
+    school_list = SchoolList.objects.all()
+    for obj in school_list:
+        response[obj.schoolname] = obj.peopleCount
+    return HttpResponse(json.dumps(response))
+
+def student(request):
+    """获取学生信息"""
+    response = {}
+    studentList = Studentlist.objects.all()
+    for obj in studentList:
+        response[obj.name] = obj.rank
     return HttpResponse(json.dumps(response))
 
 def get_specialist_list(name, cate):
@@ -155,3 +150,4 @@ def get_specialist_list(name, cate):
                 return Specialist.objects.filter(name__contains=name).filter(category=cate)
     else:
         return Specialist.objects.all()
+

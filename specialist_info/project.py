@@ -1,5 +1,6 @@
 """项目信息管理视图"""
 
+import json
 from functools import wraps
 from random import sample
 import docx
@@ -9,7 +10,7 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator
 from django.core.paginator import PageNotAnInteger
 from django.core.paginator import EmptyPage
-from Specialist.models import Specialist
+from Specialist.models import *
 from Specialist.models import Project
 from Specialist.models import ProjectSpecialist
 from Specialist.models import UserInfo
@@ -56,35 +57,6 @@ def list_project(request, *arg):
     arg[0]['page'] = current_page
     arg[0]['projects'] = projects
     return render(request, 'project_list.html', arg[0])
-
-@check_login
-@check_user
-@base
-def extract(request, *arg):
-    """专家抽取"""
-    if request.method == 'GET':
-        return render(request, 'extract.html', arg[0])
-    if request.method == 'POST':
-        r_name = request.POST.get('name')
-        r_category = request.POST.get('category')
-        r_num = request.POST.get('num')
-        username = request.session['username']
-        specialist_list = list(Specialist.objects.filter(category=r_category))
-        specialist_list_len = len(specialist_list)
-        if specialist_list_len < int(r_num):
-            ret = '<h1>此分类仅有' + str(specialist_list_len) + '名专家</h1>'
-            return HttpResponse(ret)
-        ret_list = sample(specialist_list, int(r_num))
-        print(ret_list)
-        project = Project(name=r_name, owner=UserInfo.objects.get(username=username))
-        project.save()
-        for spec in ret_list:
-            project_spec_obj = ProjectSpecialist()
-            project_spec_obj.pid = project
-            project_spec_obj.sid = spec
-            project_spec_obj.comment = ''
-            project_spec_obj.save()
-        return redirect('/project/view?id=' + str(project.id))
 
 @check_login
 @check_user
@@ -168,3 +140,35 @@ def export(request):
         row_cells[5].text = specialist.sid.email
     doc.save(response)
     return response
+
+@check_login
+@base
+def extractStudent(request, *arg):
+    #返回的信息
+    response = {}
+    #学校数据
+    school_list = SchoolList.objects.all()
+    #学生数据
+    student_list = Studentlist.objects.all()
+
+    for obj in student_list:
+        nameAndRank = obj.name + ":" + str(obj.rank)
+        response[nameAndRank] = obj.volunteer1
+
+    return HttpResponse(json.dumps(response))
+
+@check_login
+@check_user
+@base
+def extract(request, *arg):
+    """学生抽取"""
+
+    #返回的信息
+    response = {}
+    #学校数据
+    school_list = SchoolList.objects.all()
+    #学生数据
+    student_list = Studentlist.objects.all()
+    response['student_list'] = student_list
+
+    return render(request, 'extract_student.html', response)

@@ -32,7 +32,8 @@ urlpatterns = [
     path('specialist/add/', specialist.add_specialist),
     path('school/add/', specialist.add_school),
     path('specialist/category/', specialist.category),
-    path('specialist/list/', specialist.list_specialist),
+
+    path('specialist/student/', specialist.student),
     path('specialist/view/', specialist.view_specialist),
     path('specialist/del/', specialist.del_specialist),
     path('specialist/update/', specialist.update_specialist),
@@ -42,4 +43,6 @@ urlpatterns = [
     path('project/comment/', project.comment_project),
     path('project/export/', project.export),
     path('project/del/', project.del_project),
+    path('project/extractStudent/', project.extractStudent),
+
 ]

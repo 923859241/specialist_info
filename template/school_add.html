@@ -5,15 +5,22 @@
     <script src="{% static "js/jquery.js" %}"></script>
     <script src="{% static "js/category.js" %}" text="javascript"></script>
     <script src="{% static "js/specialist.js" %}" text="javascript"></script>
+    <script>
+        function myFunction(){
+            alert("添加成功");
+        }
+    </script>
 {% endblock mainhead %}
 
 {% block maintitle %}
     <h1>加入学校</h1>
 {% endblock maintitle %}
 
+
+
 {% block mainbody %}
     <form class="pure-form pure-form-aligned form-left" action="/school/add/" method="POST"
-        onsubmit="return add_specialist(this)">
+        onsubmit="return add_schoollist(this)">
         {% csrf_token %}
         <fieldset>
             <div class="pure-control-group">
@@ -28,9 +35,34 @@
 
             <div class="pure-control-group">
                 <label></label>
-                <button class="pure-button pure-button-primary" type="submit">增加</button>
+                <button class="pure-button pure-button-primary" onclick="myFunction()" type="submit">增加</button>
                 <p class="error" id="error"></p>
             </div>
         </fieldset>
     </form>
+
+
+    <form class="pure-form" action="/school/add/" method="GET">
+        {% csrf_token %}
+        <fieldset>
+        <button type="submit" class="pure-button pure-button-primary">查询</button>
+        </fieldset>
+    </form>
+    <table class="pure-table" style="width: 100%;">
+    <thead>
+        <tr>
+            <th>学校名</th>
+            <th>人数</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for school in school_list %}
+        <tr>
+            <td>{{ school.schoolname }}</td>
+            <td>{{ school.peopleCount }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
 {% endblock mainbody %}

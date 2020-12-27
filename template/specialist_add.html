@@ -3,8 +3,13 @@
     <title>信息采集</title>
     {% load static %}
     <script src="{% static "js/jquery.js" %}"></script>
-    <script src="{% static "js/category.js" %}" text="javascript"></script>
+    <script src="{% static "js/student.js" %}" text="javascript"></script>
     <script src="{% static "js/specialist.js" %}" text="javascript"></script>
+        <script>
+        function myFunction(){
+            alert("添加成功");
+        }
+    </script>
 {% endblock mainhead %}
 
 {% block maintitle %}
@@ -26,18 +31,6 @@
                 <select name="sex" id="sex">
                     <option value="男">男</option>
                     <option value="女">女</option>
-                </select>
-            </div>
-
-            <div class="pure-control-group">
-                <label for="birth">出生日期</label>
-                <input type="date" name="birth" id="birth" required>
-            </div>
-
-            <div class="pure-control-group">
-                <label for="category">类别</label>
-                <select name="category" id="category" required>
-                    <option value=0>请选择</option>
                 </select>
             </div>
 
@@ -67,11 +60,35 @@
 
             <div class="pure-control-group">
                 <label></label>
-                <button class="pure-button pure-button-primary" type="submit">增加</button>
+                <button class="pure-button pure-button-primary" onclick="myFunction()" type="submit">增加</button>
                 <p class="error" id="error"></p>
             </div>
 
-
         </fieldset>
     </form>
+
+    <form class="pure-form" action="/specialist/add/" method="GET">
+        {% csrf_token %}
+        <fieldset>
+        <button type="submit" class="pure-button pure-button-primary">查询</button>
+        </fieldset>
+    </form>
+
+    <table class="pure-table" style="width: 100%;">
+    <thead>
+        <tr>
+            <th>学生名</th>
+            <th>序号</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for student in student_list %}
+        <tr>
+            <td>{{ student.name }}</td>
+            <td>{{ student.rank }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
 {% endblock mainbody %}

@@ -35,6 +35,25 @@ class Specialist(models.Model):
     email = models.CharField(max_length=30)
     category = models.ForeignKey('SpecialistCategory', on_delete=models.PROTECT)
 
+class Studentlist(models.Model):
+    """学生信息
+    - 姓名： name char 16
+    - 性别: sex char 1
+    - 出生年月： birth date
+    - 手机号: phone char 11
+    - 邮箱: email char 30
+    - 类别: category ForeignKey SpecialistCategory.key
+    - 照片: photo char 100
+    """
+    name = models.CharField(max_length=16)
+    sex = models.CharField(max_length=6)
+    phone = models.CharField(max_length=11)
+    email = models.CharField(max_length=30)
+    volunteer1 = models.CharField(max_length=11)
+    volunteer2 = models.CharField(max_length=11)
+    volunteer3 = models.CharField(max_length=11)
+    rank = models.IntegerField()
+
 class SpecialistCategory(models.Model):
     """专家分类
     - 分类key key char 8
